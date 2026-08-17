@@ -1,0 +1,149 @@
+{
+  "_version": 1,
+  "flow": {
+    "uuid": "db-sqlite-flow",
+    "name": "SQLite In-Memory Flow",
+    "nodes": [
+      {
+        "uuid": "entry-001",
+        "type": "entry",
+        "name": "Entry",
+        "position": {
+          "x": 0,
+          "y": 0
+        },
+        "data": {
+          "type": "entry"
+        },
+        "ports": null
+      },
+      {
+        "uuid": "db-connect-001",
+        "type": "db:connect",
+        "name": "Connect SQLite",
+        "position": {
+          "x": 100,
+          "y": 0
+        },
+        "data": {
+          "type": "db:connect",
+          "connection_uuid": "sqlite-conn-001",
+          "driver": "sqlite",
+          "connection_string": ":memory:",
+          "min_connections": 1,
+          "max_connections": 1,
+          "connect_timeout_ms": 5000
+        },
+        "ports": null
+      },
+      {
+        "uuid": "db-query-001",
+        "type": "db:query",
+        "name": "Create Test Table",
+        "position": {
+          "x": 200,
+          "y": 0
+        },
+        "data": {
+          "type": "db:query",
+          "connection_uuid": "sqlite-conn-001",
+          "sql": "CREATE TABLE IF NOT EXISTS test_table (id INTEGER PRIMARY KEY, name TEXT, value INTEGER)",
+          "fetch_mode": "scalar",
+          "timeout_ms": 5000
+        },
+        "ports": null
+      },
+      {
+        "uuid": "db-query-002",
+        "type": "db:query",
+        "name": "Insert Test Data",
+        "position": {
+          "x": 300,
+          "y": 0
+        },
+        "data": {
+          "type": "db:query",
+          "connection_uuid": "sqlite-conn-001",
+          "sql": "INSERT INTO test_table (name, value) VALUES (?, ?)",
+          "params": [
+            "test_item",
+            "100"
+          ],
+          "fetch_mode": "scalar",
+          "timeout_ms": 5000
+        },
+        "ports": null
+      },
+      {
+        "uuid": "db-query-003",
+        "type": "db:query",
+        "name": "Query Test Data",
+        "position": {
+          "x": 400,
+          "y": 0
+        },
+        "data": {
+          "type": "db:query",
+          "connection_uuid": "sqlite-conn-001",
+          "sql": "SELECT * FROM test_table",
+          "fetch_mode": "all",
+          "result_to": "query_result",
+          "timeout_ms": 5000
+        },
+        "ports": null
+      },
+      {
+        "uuid": "db-close-001",
+        "type": "db:close",
+        "name": "Close Connection",
+        "position": {
+          "x": 500,
+          "y": 0
+        },
+        "data": {
+          "type": "db:close",
+          "connection_uuid": "sqlite-conn-001"
+        },
+        "ports": null
+      }
+    ],
+    "connections": [
+      {
+        "id": "conn-001",
+        "source_node_uuid": "entry-001",
+        "target_node_uuid": "db-connect-001",
+        "source_port_id": "out",
+        "target_port_id": "in"
+      },
+      {
+        "id": "conn-002",
+        "source_node_uuid": "db-connect-001",
+        "target_node_uuid": "db-query-001",
+        "source_port_id": "true",
+        "target_port_id": "in"
+      },
+      {
+        "id": "conn-003",
+        "source_node_uuid": "db-query-001",
+        "target_node_uuid": "db-query-002",
+        "source_port_id": "true",
+        "target_port_id": "in"
+      },
+      {
+        "id": "conn-004",
+        "source_node_uuid": "db-query-002",
+        "target_node_uuid": "db-query-003",
+        "source_port_id": "true",
+        "target_port_id": "in"
+      },
+      {
+        "id": "conn-005",
+        "source_node_uuid": "db-query-003",
+        "target_node_uuid": "db-close-001",
+        "source_port_id": "true",
+        "target_port_id": "in"
+      }
+    ]
+  },
+  "_meta": null
+}

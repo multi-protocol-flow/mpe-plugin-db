@@ -1,0 +1,105 @@
+{
+  "_version": 1,
+  "flow": {
+    "uuid": "db-mysql-flow",
+    "name": "MySQL Database Flow",
+    "nodes": [
+      {
+        "uuid": "entry-001",
+        "type": "entry",
+        "name": "Entry",
+        "position": {
+          "x": 0,
+          "y": 0
+        },
+        "data": {
+          "type": "entry"
+        },
+        "ports": null
+      },
+      {
+        "uuid": "db-connect-001",
+        "type": "db:connect",
+        "name": "Connect MySQL",
+        "position": {
+          "x": 100,
+          "y": 0
+        },
+        "data": {
+          "type": "db:connect",
+          "connection_uuid": "mysql-conn-001",
+          "driver": "mysql",
+          "host": "localhost",
+          "port": 3306,
+          "database": "testdb",
+          "username": "root",
+          "password": "root",
+          "min_connections": 1,
+          "max_connections": 10,
+          "test_query": "SELECT 1",
+          "connect_timeout_ms": 10000
+        },
+        "ports": null
+      },
+      {
+        "uuid": "db-query-001",
+        "type": "db:query",
+        "name": "Query Products",
+        "position": {
+          "x": 200,
+          "y": 0
+        },
+        "data": {
+          "type": "db:query",
+          "connection_uuid": "mysql-conn-001",
+          "sql": "SELECT id, name, price FROM products WHERE status = ?",
+          "params": [
+            "active"
+          ],
+          "fetch_mode": "all",
+          "result_to": "products",
+          "timeout_ms": 5000
+        },
+        "ports": null
+      },
+      {
+        "uuid": "db-close-001",
+        "type": "db:close",
+        "name": "Close Connection",
+        "position": {
+          "x": 300,
+          "y": 0
+        },
+        "data": {
+          "type": "db:close",
+          "connection_uuid": "mysql-conn-001"
+        },
+        "ports": null
+      }
+    ],
+    "connections": [
+      {
+        "id": "conn-001",
+        "source_node_uuid": "entry-001",
+        "target_node_uuid": "db-connect-001",
+        "source_port_id": "out",
+        "target_port_id": "in"
+      },
+      {
+        "id": "conn-002",
+        "source_node_uuid": "db-connect-001",
+        "target_node_uuid": "db-query-001",
+        "source_port_id": "true",
+        "target_port_id": "in"
+      },
+      {
+        "id": "conn-003",
+        "source_node_uuid": "db-query-001",
+        "target_node_uuid": "db-close-001",
+        "source_port_id": "true",
+        "target_port_id": "in"
+      }
+    ]
+  },
+  "_meta": null
+}

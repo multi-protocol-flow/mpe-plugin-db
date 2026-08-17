@@ -1,0 +1,23 @@
+[package]
+name = "mpe-plugin-db"
+version = "0.1.0"
+edition = "2021"
+description = "SQLite/MySQL/PostgreSQL sidecar plugin for MPE"
+
+[dependencies]
+# Official plugin: public SDK only, never host types (flow-engine-core etc.)
+mpe-plugin-sdk = { git = "https://github.com/multi-protocol-flow/mpe-plugin-sdk.git", tag = "v0.1.0" }
+sqlx = { version = "0.8", default-features = false, features = ["runtime-tokio", "any", "sqlite", "mysql", "postgres", "json", "chrono", "rust_decimal"] }
+serde = { version = "1", features = ["derive"] }
+serde_json = { version = "1", features = ["preserve_order"] }
+tokio = { version = "1", features = ["full"] }
+log = "0.4"
+chrono = { version = "0.4", features = ["serde"] }
+parking_lot = "0.12"
+
+[profile.release]
+opt-level = 3
+
+[[bin]]
+name = "mpe_db_plugin"
+path = "src/main.rs"

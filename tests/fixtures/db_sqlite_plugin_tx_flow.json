@@ -1,0 +1,116 @@
+{
+  "_version": 1,
+  "flow": {
+    "uuid": "db-sqlite-plugin-tx-flow",
+    "name": "SQLite Transaction Flow (plugins/db)",
+    "nodes": [
+      {
+        "uuid": "entry-001",
+        "type": "entry",
+        "name": "Entry",
+        "position": { "x": 0, "y": 0 },
+        "data": { "type": "entry" },
+        "ports": null
+      },
+      {
+        "uuid": "db-connect-001",
+        "type": "db:connect",
+        "name": "Connect SQLite",
+        "position": { "x": 100, "y": 0 },
+        "data": {
+          "type": "db:connect",
+          "connection_uuid": "",
+          "driver": "sqlite",
+          "connection_string": ":memory:",
+          "max_connections": 1,
+          "connect_timeout_ms": 5000
+        },
+        "ports": null
+      },
+      {
+        "uuid": "db-query-001",
+        "type": "db:query",
+        "name": "Create Table",
+        "position": { "x": 300, "y": 0 },
+        "data": {
+          "type": "db:query",
+          "connection_uuid": "db-connect-001",
+          "sql": "CREATE TABLE IF NOT EXISTS tx_table (id INTEGER PRIMARY KEY, name TEXT)",
+          "fetch_mode": "scalar",
+          "timeout_ms": 5000
+        },
+        "ports": null
+      },
+      {
+        "uuid": "db-begin-001",
+        "type": "db:begin",
+        "name": "Begin Tx",
+        "position": { "x": 500, "y": 0 },
+        "data": { "type": "db:begin", "connection_uuid": "db-connect-001" },
+        "ports": null
+      },
+      {
+        "uuid": "db-query-002",
+        "type": "db:query",
+        "name": "Insert in Tx",
+        "position": { "x": 700, "y": 0 },
+        "data": {
+          "type": "db:query",
+          "connection_uuid": "db-connect-001",
+          "sql": "INSERT INTO tx_table (name) VALUES ('tx-item')",
+          "fetch_mode": "scalar",
+          "timeout_ms": 5000
+        },
+        "ports": null
+      },
+      {
+        "uuid": "db-query-003",
+        "type": "db:query",
+        "name": "Count in Tx",
+        "position": { "x": 900, "y": 0 },
+        "data": {
+          "type": "db:query",
+          "connection_uuid": "db-connect-001",
+          "sql": "SELECT COUNT(*) AS cnt FROM tx_table",
+          "fetch_mode": "scalar",
+          "timeout_ms": 5000
+        },
+        "ports": null
+      },
+      {
+        "uuid": "db-commit-001",
+        "type": "db:commit",
+        "name": "Commit Tx",
+        "position": { "x": 1100, "y": 0 },
+        "data": { "type": "db:commit", "connection_uuid": "db-connect-001" },
+        "ports": null
+      },
+      {
+        "uuid": "db-close-001",
+        "type": "db:close",
+        "name": "Close Connection",
+        "position": { "x": 1300, "y": 0 },
+        "data": { "type": "db:close", "connection_uuid": "db-connect-001" },
+        "ports": null
+      },
+      {
+        "uuid": "end-001",
+        "type": "end",
+        "name": "End",
+        "position": { "x": 1500, "y": 0 },
+        "data": { "type": "end" },
+        "ports": null
+      }
+    ],
+    "connections": [
+      { "id": "c1", "source_node_uuid": "entry-001", "source_port_id": "out", "target_node_uuid": "db-connect-001", "target_port_id": "in" },
+      { "id": "c2", "source_node_uuid": "db-connect-001", "source_port_id": "true", "target_node_uuid": "db-query-001", "target_port_id": "in" },
+      { "id": "c3", "source_node_uuid": "db-query-001", "source_port_id": "true", "target_node_uuid": "db-begin-001", "target_port_id": "in" },
+      { "id": "c4", "source_node_uuid": "db-begin-001", "source_port_id": "true", "target_node_uuid": "db-query-002", "target_port_id": "in" },
+      { "id": "c5", "source_node_uuid": "db-query-002", "source_port_id": "true", "target_node_uuid": "db-query-003", "target_port_id": "in" },
+      { "id": "c6", "source_node_uuid": "db-query-003", "source_port_id": "true", "target_node_uuid": "db-commit-001", "target_port_id": "in" },
+      { "id": "c7", "source_node_uuid": "db-commit-001", "source_port_id": "true", "target_node_uuid": "db-close-001", "target_port_id": "in" },
+      { "id": "c8", "source_node_uuid": "db-close-001", "source_port_id": "out", "target_node_uuid": "end-001", "target_port_id": "in" }
+    ]
+  }
+}

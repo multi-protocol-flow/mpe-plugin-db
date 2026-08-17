@@ -1,0 +1,105 @@
+{
+  "_version": 1,
+  "flow": {
+    "uuid": "db-postgres-flow",
+    "name": "PostgreSQL Database Flow",
+    "nodes": [
+      {
+        "uuid": "entry-001",
+        "type": "entry",
+        "name": "Entry",
+        "position": {
+          "x": 0,
+          "y": 0
+        },
+        "data": {
+          "type": "entry"
+        },
+        "ports": null
+      },
+      {
+        "uuid": "db-connect-001",
+        "type": "db:connect",
+        "name": "Connect PostgreSQL",
+        "position": {
+          "x": 100,
+          "y": 0
+        },
+        "data": {
+          "type": "db:connect",
+          "connection_uuid": "pg-conn-001",
+          "driver": "postgres",
+          "host": "localhost",
+          "port": 5432,
+          "database": "testdb",
+          "username": "postgres",
+          "password": "postgres",
+          "min_connections": 1,
+          "max_connections": 5,
+          "test_query": "SELECT 1",
+          "connect_timeout_ms": 10000
+        },
+        "ports": null
+      },
+      {
+        "uuid": "db-query-001",
+        "type": "db:query",
+        "name": "Query Users",
+        "position": {
+          "x": 200,
+          "y": 0
+        },
+        "data": {
+          "type": "db:query",
+          "connection_uuid": "pg-conn-001",
+          "sql": "SELECT id, name, email FROM users WHERE id = $1",
+          "params": [
+            "1"
+          ],
+          "fetch_mode": "one",
+          "result_to": "user_data",
+          "timeout_ms": 5000
+        },
+        "ports": null
+      },
+      {
+        "uuid": "db-close-001",
+        "type": "db:close",
+        "name": "Close Connection",
+        "position": {
+          "x": 300,
+          "y": 0
+        },
+        "data": {
+          "type": "db:close",
+          "connection_uuid": "pg-conn-001"
+        },
+        "ports": null
+      }
+    ],
+    "connections": [
+      {
+        "id": "conn-001",
+        "source_node_uuid": "entry-001",
+        "target_node_uuid": "db-connect-001",
+        "source_port_id": "out",
+        "target_port_id": "in"
+      },
+      {
+        "id": "conn-002",
+        "source_node_uuid": "db-connect-001",
+        "target_node_uuid": "db-query-001",
+        "source_port_id": "true",
+        "target_port_id": "in"
+      },
+      {
+        "id": "conn-003",
+        "source_node_uuid": "db-query-001",
+        "target_node_uuid": "db-close-001",
+        "source_port_id": "true",
+        "target_port_id": "in"
+      }
+    ]
+  },
+  "_meta": null
+}

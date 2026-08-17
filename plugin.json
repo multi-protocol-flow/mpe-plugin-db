@@ -1,0 +1,13 @@
+{
+  "name": "db",
+  "version": "0.1.0",
+  "description": "SQLite/MySQL/PostgreSQL protocol plugin: connect/query/begin/commit/rollback/close",
+  "entry": {
+    "command": "./mpe_db_plugin"
+  },
+  "env": {},
+  "permissions": [],
+  "capabilities": { "streaming": true },
+  "locales": ["zh-CN", "en-US"],
+  "default_locale": "en-US"
+}
