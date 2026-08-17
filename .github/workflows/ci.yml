@@ -41,12 +41,12 @@ jobs:
           python3 - "${{ steps.version.outputs.value }}" <<'EOF'
           import re, sys
           version = sys.argv[1]
-          cargo = open("Cargo.toml").read()
+          cargo = open("Cargo.toml", encoding="utf-8").read()
           cargo = re.sub(r'^version = "[^"]*"', f'version = "{version}"', cargo, count=1, flags=re.M)
-          open("Cargo.toml", "w").write(cargo)
-          manifest = open("plugin.json").read()
+          open("Cargo.toml", "w", encoding="utf-8").write(cargo)
+          manifest = open("plugin.json", encoding="utf-8").read()
           manifest = re.sub(r'"version": "[^"]*"', f'"version": "{version}"', manifest, count=1)
-          open("plugin.json", "w").write(manifest)
+          open("plugin.json", "w", encoding="utf-8").write(manifest)
           EOF
       - name: Build (release)
         run: cargo build --release
