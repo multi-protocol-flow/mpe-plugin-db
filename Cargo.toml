@@ -19,5 +19,5 @@ parking_lot = "0.12"
 opt-level = 3
 
 [[bin]]
-name = "mpe_db_plugin"
+name = "mpe_plugin_db"
 path = "src/main.rs"

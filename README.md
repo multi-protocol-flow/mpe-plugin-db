@@ -98,7 +98,7 @@ chrono = { version = "0.4", features = ["serde"] }
 parking_lot = "0.12"
 
 [[bin]]
-name = "mpe_db_plugin"
+name = "mpe_plugin_db"
 path = "src/main.rs"
 ```
 
@@ -108,7 +108,7 @@ all three CI platforms without a system SQLite install.
 ## 4. Build and test
 
 > **plugin.json `entry.command`**: a relative path in marketplace-contract form,
-> `./mpe_db_plugin`. The current host resolves the command against its own CWD
+> `./mpe_plugin_db`. The current host resolves the command against its own CWD
 > (it does not chdir into the plugin directory). When developing in this
 > repository, if you want the host to launch the plugin directly, either change
 > `command` to an absolute path on your machine, or start the host from the

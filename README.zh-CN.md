@@ -91,7 +91,7 @@ chrono = { version = "0.4", features = ["serde"] }
 parking_lot = "0.12"
 
 [[bin]]
-name = "mpe_db_plugin"
+name = "mpe_plugin_db"
 path = "src/main.rs"
 ```
 
@@ -100,7 +100,7 @@ path = "src/main.rs"
 
 ## 4. 构建与测试
 
-> **plugin.json 的 `entry.command`**：值为市场契约形式的相对路径 `./mpe_db_plugin`。
+> **plugin.json 的 `entry.command`**：值为市场契约形式的相对路径 `./mpe_plugin_db`。
 > 当前宿主以自身 CWD 解析该命令（不 chdir 到插件目录）。仓库内开发调试时，若需宿主
 > 直接拉起本插件，可把 command 改为本机绝对路径，或在插件目录下启动宿主。
 
