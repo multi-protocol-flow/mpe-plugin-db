@@ -3,6 +3,8 @@ name = "mpe-plugin-db"
 version = "0.1.1"
 edition = "2021"
 description = "SQLite/MySQL/PostgreSQL sidecar plugin for MPE"
+license = "MIT"
+repository = "https://github.com/multi-protocol-flow/mpe-plugin-db"
 
 [dependencies]
 # Official plugin: public SDK only, never host types (flow-engine-core etc.)
